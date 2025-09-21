@@ -45,9 +45,9 @@ public class Airport extends BaseEntity {
         this.airportLocation = builder.location;
         this.mapCoordinateWidth = builder.mapCoordinateWidth;
         this.mapCoordinateHeight = builder.mapCoordinateHeight;
-        this.runways = builder.runways;
-        this.taxiways = builder.taxiways;
-        this.parkingSpots = builder.parkingSpots;
+        this.runways.addAll(builder.runways);
+        this.taxiways.addAll(builder.taxiways);
+        this.parkingSpots.addAll(builder.parkingSpots);
     }
 
     public static class Builder {
@@ -86,7 +86,11 @@ public class Airport extends BaseEntity {
         }
 
         public Airport build(){
-            return new Airport(this);
+            Airport airport = new Airport(this);
+            airport.runways.forEach(r -> r.setAirport(airport));
+            airport.taxiways.forEach(t -> t.setAirport(airport));
+            airport.parkingSpots.forEach(p -> p.setAirport(airport));
+            return airport;
         }
     }
 }
