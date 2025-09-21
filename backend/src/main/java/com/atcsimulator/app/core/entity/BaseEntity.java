@@ -1,4 +1,4 @@
-package com.atcsimulator.app.core.entities;
+package com.atcsimulator.app.core.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

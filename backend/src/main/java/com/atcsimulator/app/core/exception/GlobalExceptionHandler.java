@@ -1,4 +1,4 @@
-package com.atcsimulator.app.core.exceptions;
+package com.atcsimulator.app.core.exception;
 
 import com.atcsimulator.app.core.payload.ErrorResponse;
 import org.springframework.http.ResponseEntity;

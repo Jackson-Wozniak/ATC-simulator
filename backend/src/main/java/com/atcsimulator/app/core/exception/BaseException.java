@@ -1,4 +1,4 @@
-package com.atcsimulator.app.core.exceptions;
+package com.atcsimulator.app.core.exception;
 
 import lombok.Getter;
 import lombok.Setter;

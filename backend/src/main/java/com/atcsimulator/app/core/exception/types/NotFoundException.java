@@ -1,6 +1,6 @@
-package com.atcsimulator.app.core.exceptions.types;
+package com.atcsimulator.app.core.exception.types;
 
-import com.atcsimulator.app.core.exceptions.BaseException;
+import com.atcsimulator.app.core.exception.BaseException;
 import org.springframework.http.HttpStatus;
 
 public class NotFoundException extends BaseException {
