@@ -4,6 +4,7 @@ import com.atcsimulator.app.core.entity.BaseEntity;
 import com.atcsimulator.app.modules.airport.entity.component.ParkingSpot;
 import com.atcsimulator.app.modules.airport.entity.component.Runway;
 import com.atcsimulator.app.modules.airport.entity.component.Taxiway;
+import com.atcsimulator.app.modules.plane.entity.Plane;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,9 @@ public class Airport extends BaseEntity {
 
     @OneToMany(mappedBy = "airport", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ParkingSpot> parkingSpots = new ArrayList<>();
+
+    @OneToMany(mappedBy = "airport", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Plane> planes = new ArrayList<>();
 
     public Airport(Builder builder){
         super();
