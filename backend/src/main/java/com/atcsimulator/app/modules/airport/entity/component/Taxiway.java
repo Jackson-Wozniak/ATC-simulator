@@ -1,7 +1,8 @@
 package com.atcsimulator.app.modules.airport.entity.component;
 
 import com.atcsimulator.app.core.entity.BaseEntity;
-import com.atcsimulator.app.core.entity.Coordinate;
+import com.atcsimulator.app.core.entity.LocalCoordinate;
+import com.atcsimulator.app.core.entity.Meters;
 import com.atcsimulator.app.modules.airport.entity.Airport;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,33 +22,32 @@ public class Taxiway extends BaseEntity {
     private int heading;
 
     @Embedded
-    private Coordinate startingCoordinate;
+    private LocalCoordinate startingLocalCoordinate;
 
     @Embedded
-    private Coordinate endingCoordinate;
+    @AttributeOverride(name = "value", column = @Column(name = "width_meters"))
+    private Meters width;
 
-    @Column(name = "width")
-    private double width;
-
-    @Column(name = "length")
-    private double length;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "length_meters"))
+    private Meters length;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "airport_id")
     private Airport airport;
 
     public Taxiway(String name, int heading, double width,
-                   double length, Coordinate start){
+                   double length, LocalCoordinate start){
         this.taxiwayName = name;
         this.heading = heading;
-        this.width = width;
-        this.length = length;
-        this.startingCoordinate = start;
+        this.width = new Meters(width);
+        this.length = new Meters(length);
+        this.startingLocalCoordinate = start;
 
         double radians = Math.toRadians(heading);
-        double endX = start.getX() + length * Math.sin(radians);
-        double endY = start.getY() + length * Math.cos(radians);
+        double endX = start.getX().getValue() + length * Math.sin(radians);
+        double endY = start.getY().getValue() + length * Math.cos(radians);
 
-        this.endingCoordinate = new Coordinate(endX, endY, 0);
+        //this.endingLocalCoordinate = LocalCoordinate.fromMeters(endX, endY, 0);
     }
 }

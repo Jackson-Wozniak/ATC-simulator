@@ -25,12 +25,6 @@ public class Airport extends BaseEntity {
     @Column(name = "airport_location")
     private String airportLocation;
 
-    @Column(name = "map_coordinate_width")
-    private int mapCoordinateWidth;
-
-    @Column(name = "map_coordinate_height")
-    private int mapCoordinateHeight;
-
     @OneToMany(mappedBy = "airport", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Runway> runways = new ArrayList<>();
 
@@ -43,12 +37,10 @@ public class Airport extends BaseEntity {
     @OneToMany(mappedBy = "airport", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Plane> planes = new ArrayList<>();
 
-    public Airport(Builder builder){
+    protected Airport(Builder builder){
         super();
         this.airportName = builder.name;
         this.airportLocation = builder.location;
-        this.mapCoordinateWidth = builder.mapCoordinateWidth;
-        this.mapCoordinateHeight = builder.mapCoordinateHeight;
         this.runways.addAll(builder.runways);
         this.taxiways.addAll(builder.taxiways);
         this.parkingSpots.addAll(builder.parkingSpots);
@@ -57,8 +49,6 @@ public class Airport extends BaseEntity {
     public static class Builder {
         private final String name;
         private final String location;
-        private int mapCoordinateWidth;
-        private int mapCoordinateHeight;
         private final List<Runway> runways = new ArrayList<>();
         private final List<Taxiway> taxiways = new ArrayList<>();
         private final List<ParkingSpot> parkingSpots = new ArrayList<>();
@@ -66,12 +56,6 @@ public class Airport extends BaseEntity {
         public Builder(String name, String location){
             this.name = name;
             this.location = location;
-        }
-
-        public Builder coordinateDimensions(int width, int height){
-            this.mapCoordinateWidth = width;
-            this.mapCoordinateHeight = height;
-            return this;
         }
 
         public Builder runways(List<Runway> runways){

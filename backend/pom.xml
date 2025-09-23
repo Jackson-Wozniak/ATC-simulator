@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.atcsimulator</groupId>
-    <artifactId>app</artifactId>
+    <artifactId>ATC-simulator</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ATC-simulator</name>
     <description>Simulates an air traffic control system for airports</description>
@@ -81,10 +81,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
                     </excludes>
                 </configuration>
             </plugin>

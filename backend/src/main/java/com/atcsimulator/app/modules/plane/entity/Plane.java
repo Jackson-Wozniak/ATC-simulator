@@ -1,7 +1,7 @@
 package com.atcsimulator.app.modules.plane.entity;
 
 import com.atcsimulator.app.core.entity.BaseEntity;
-import com.atcsimulator.app.core.entity.Coordinate;
+import com.atcsimulator.app.core.entity.LocalCoordinate;
 import com.atcsimulator.app.modules.airport.entity.Airport;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class Plane extends BaseEntity {
     private String callsign;
 
     @Embedded
-    private Coordinate coordinates;
+    private LocalCoordinate coordinates;
 
     @Column(name = "speed_knots")
     private double speedKnots;
