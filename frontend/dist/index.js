@@ -69,11 +69,13 @@ window.addEventListener("load", () => {
     taxiways.forEach(t => drawTaxiway(airportCtx, t));
     planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height);
     planes.forEach(p => drawPlane(planeCtx, p));
-    drawAllPlanes(planeCtx, planes, planeCanvas);
+    drawAllPlanes(planeCtx, planes, planeCanvas, 0);
 });
-function drawAllPlanes(planeCtx, planes, planeCanvas) {
+function drawAllPlanes(planeCtx, planes, planeCanvas, count) {
     planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height);
-    planes.forEach(p => p.position.x += 1);
-    planes.forEach(p => drawPlane(planeCtx, p));
-    requestAnimationFrame(() => drawAllPlanes(planeCtx, planes, planeCanvas));
+    planes.forEach(p => {
+        p.position.x += count > 150 ? 1 : -1;
+        drawPlane(planeCtx, p);
+    });
+    requestAnimationFrame(() => drawAllPlanes(planeCtx, planes, planeCanvas, count + 1));
 }
