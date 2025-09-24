@@ -41,12 +41,12 @@ function drawPlane(ctx, plane) {
     ctx.fill();
 }
 window.addEventListener("load", () => {
-    const canvas = document.getElementById("airportCanvas");
-    if (!canvas)
-        return console.error("Canvas not found!");
-    const ctx = canvas.getContext("2d");
-    if (!ctx)
-        return console.error("Failed to get 2D context");
+    const airportCanvas = document.getElementById("airportCanvas");
+    const planeCanvas = document.getElementById("planeCanvas");
+    const planeCtx = planeCanvas.getContext("2d");
+    const airportCtx = airportCanvas.getContext("2d");
+    if (airportCtx == null || planeCtx == null)
+        return;
     // Runways
     const runways = [
         { start: { x: 100, y: 100 }, end: { x: 100, y: 500 }, width: 20, name: "18R" },
@@ -64,16 +64,16 @@ window.addEventListener("load", () => {
         { position: { x: 400, y: 220 }, heading: 270, altitude: 3000, callsign: "UAL789" }, // airborne
     ];
     // Draw all
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    runways.forEach(r => drawRunway(ctx, r));
-    taxiways.forEach(t => drawTaxiway(ctx, t));
-    planes.forEach(p => drawPlane(ctx, p));
-    setTimeout(() => {
-        planes = [
-            { position: { x: 125, y: 120 }, heading: 0, altitude: 0, callsign: "AAL123" },
-            { position: { x: 210, y: 215 }, heading: 90, altitude: 0, callsign: "DAL456" },
-            { position: { x: 405, y: 225 }, heading: 270, altitude: 3000, callsign: "UAL789" }, // airborne
-        ];
-        planes.forEach(p => drawPlane(ctx, p));
-    }, 1000);
+    airportCtx.clearRect(0, 0, airportCanvas.width, airportCanvas.height);
+    runways.forEach(r => drawRunway(airportCtx, r));
+    taxiways.forEach(t => drawTaxiway(airportCtx, t));
+    planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height);
+    planes.forEach(p => drawPlane(planeCtx, p));
+    drawAllPlanes(planeCtx, planes, planeCanvas);
 });
+function drawAllPlanes(planeCtx, planes, planeCanvas) {
+    planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height);
+    planes.forEach(p => p.position.x += 1);
+    planes.forEach(p => drawPlane(planeCtx, p));
+    requestAnimationFrame(() => drawAllPlanes(planeCtx, planes, planeCanvas));
+}
