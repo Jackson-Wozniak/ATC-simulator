@@ -11,6 +11,7 @@ import com.atcsimulator.app.modules.flight.entity.FlightPlan;
 import com.atcsimulator.app.modules.plane.entity.AircraftState;
 import com.atcsimulator.app.modules.plane.entity.Plane;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/v1/flight-tracking")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class FlightTrackingController {
     private final FlightSimulationService flightSimulationService;
 
@@ -32,10 +34,9 @@ public class FlightTrackingController {
 
         Flight flight = new Flight(plane, plan);
         plan.setFlight(flight);
-        flightSimulationService.progressFlight(flight);
-        flightSimulationService.progressFlight(flight);
-        flightSimulationService.progressFlight(flight);
-        flightSimulationService.progressFlight(flight);
+        for(int i = 0; i < 100; i++){
+            flightSimulationService.progressFlight(flight);
+        }
         return flight.getFlightPlan().getFlightPathPositions().stream().map(FlightPathPositionDTO::new).toList();
     }
 }

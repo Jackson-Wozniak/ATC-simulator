@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 function drawRunway(ctx, runway) {
     const dx = runway.end.x - runway.start.x;
     const dy = runway.end.y - runway.start.y;
@@ -40,7 +49,7 @@ function drawPlane(ctx, plane) {
     ctx.fillStyle = plane.altitude > 0 ? "blue" : "green";
     ctx.fill();
 }
-window.addEventListener("load", () => {
+window.addEventListener("load", () => __awaiter(void 0, void 0, void 0, function* () {
     const airportCanvas = document.getElementById("airportCanvas");
     const planeCanvas = document.getElementById("planeCanvas");
     const planeCtx = planeCanvas.getContext("2d");
@@ -69,13 +78,28 @@ window.addEventListener("load", () => {
     taxiways.forEach(t => drawTaxiway(airportCtx, t));
     planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height);
     planes.forEach(p => drawPlane(planeCtx, p));
-    drawAllPlanes(planeCtx, planes, planeCanvas, 0);
-});
-function drawAllPlanes(planeCtx, planes, planeCanvas, count) {
+    const response = yield fetch("http://localhost:8080/api/v1/flight-tracking");
+    const positions = yield response.json();
+    console.log(positions);
+    drawPlaneAt(planeCtx, planeCanvas, { x: 100, y: 100 });
+    for (let i = 0; i < positions.length; i++) {
+        const p = positions[i];
+        drawPlaneAt(planeCtx, planeCanvas, { x: p.xposition, y: p.yposition });
+        yield timeout(1000);
+    }
+}));
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+function drawPlaneAt(planeCtx, planeCanvas, p) {
+    planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height); // keep this
+    const plane = {
+        position: { x: p.x, y: p.y },
+        heading: 0, altitude: 0, callsign: ""
+    };
+    drawPlane(planeCtx, plane);
+}
+function drawAllPlanes(planeCtx, plane, planeCanvas) {
     planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height);
-    planes.forEach(p => {
-        p.position.x += count > 100 ? -5 : 5;
-        drawPlane(planeCtx, p);
-    });
-    requestAnimationFrame(() => drawAllPlanes(planeCtx, planes, planeCanvas, count + 1));
+    drawPlane(planeCtx, plane);
 }

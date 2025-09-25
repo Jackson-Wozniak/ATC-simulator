@@ -22,6 +22,11 @@ interface Plane {
   heading: number;
   callsign: string;
 }
+interface Position {
+    timestamp: string,
+    xposition: number,
+    yposition: number
+}
 
 function drawRunway(ctx: CanvasRenderingContext2D, runway: Runway) {
   const dx = runway.end.x - runway.start.x;
@@ -71,7 +76,7 @@ function drawPlane(ctx: CanvasRenderingContext2D, plane: Plane) {
   ctx.fill();
 }
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
     const airportCanvas = document.getElementById("airportCanvas") as HTMLCanvasElement;
     const planeCanvas = document.getElementById("planeCanvas") as HTMLCanvasElement;
 
@@ -106,17 +111,38 @@ window.addEventListener("load", () => {
 
     planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height);
     planes.forEach(p => drawPlane(planeCtx, p));
-    
-    drawAllPlanes(planeCtx, planes, planeCanvas, 0);
+
+    const response = await fetch("http://localhost:8080/api/v1/flight-tracking");
+    const positions: Position[] = await response.json();
+
+    console.log(positions);
+
+    drawPlaneAt(planeCtx, planeCanvas, {x: 100, y: 100});
+
+    for(let i = 0; i < positions.length; i++){
+        const p = positions[i];
+        drawPlaneAt(planeCtx, planeCanvas, {x: p.xposition, y: p.yposition});
+        await timeout(1000);
+    }
 });
 
-function drawAllPlanes(planeCtx: CanvasRenderingContext2D, planes: Plane[], 
-    planeCanvas: HTMLCanvasElement, count: number){
-    planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height);
-    planes.forEach(p => {
-        p.position.x += count > 100 ? -5 : 5;
-        drawPlane(planeCtx, p);
-    });
+function timeout(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-    requestAnimationFrame(() => drawAllPlanes(planeCtx, planes, planeCanvas, count + 1));
+function drawPlaneAt(planeCtx: CanvasRenderingContext2D, planeCanvas: HTMLCanvasElement, 
+    p: {x: number, y: number}) {
+  planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height); // keep this
+  const plane: Plane = {
+    position: {x: p.x, y: p.y},
+    heading: 0, altitude: 0, callsign: ""
+  };
+  drawPlane(planeCtx, plane);
+}
+
+
+function drawAllPlanes(planeCtx: CanvasRenderingContext2D, plane: Plane, 
+    planeCanvas: HTMLCanvasElement){
+    planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height);
+    drawPlane(planeCtx, plane);
 }
