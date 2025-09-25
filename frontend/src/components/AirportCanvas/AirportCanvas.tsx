@@ -2,8 +2,9 @@ import Box from "@mui/material/Box"
 import { useEffect } from "react";
 
 const AirportCanvas: React.FC<{
-    zIndex: number
-}> = ({zIndex}) => {
+    zIndex: number,
+    pixelsPerMeter: number
+}> = ({zIndex, pixelsPerMeter}) => {
     useEffect(() => {
         // const canvas = document.getElementById("airportCanvas") as HTMLCanvasElement;
         // if (!canvas) return;
@@ -38,8 +39,8 @@ const AirportCanvas: React.FC<{
 const ctx = canvas.getContext("2d")!;
 
 
-canvas.width = 800;
-canvas.height = 600;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 animate(canvas, ctx);
 }, []);
@@ -50,15 +51,17 @@ function drawScene(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
 
   const canvasCenterX = canvas.width / 2;
 const canvasCenterY = canvas.height / 2;
-const pixelsPerMeter = 0.1;
 
   // Move origin to center of canvas
   ctx.translate(canvasCenterX, canvasCenterY);
   ctx.scale(pixelsPerMeter, -pixelsPerMeter); // Flip Y so north/up is positive
 
+  ctx.fillStyle = "green";
+  ctx.fillRect(-(canvas.width / 2) / pixelsPerMeter, -(canvas.height / 2) / pixelsPerMeter, canvas.width / pixelsPerMeter, canvas.height / pixelsPerMeter);
+
   // Example runway (static)
   ctx.fillStyle = "gray";
-  ctx.fillRect(-100, 50, 200, 20); // in world coordinates
+  ctx.fillRect(-100, 50, 2000, 50); // in world coordinates
 }
 
 function animate(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {

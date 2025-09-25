@@ -2,8 +2,9 @@ import Box from "@mui/material/Box"
 import { useEffect } from "react";
 
 const PlaneCanvas: React.FC<{
-    zIndex: number
-}> = ({zIndex}) => {
+    zIndex: number,
+    pixelsPerMeter: number
+}> = ({zIndex, pixelsPerMeter}) => {
     useEffect(() => {
         // const canvas = document.getElementById("airportCanvas") as HTMLCanvasElement;
         // if (!canvas) return;
@@ -37,9 +38,8 @@ const PlaneCanvas: React.FC<{
         const canvas = document.getElementById("planeCanvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
 
-
-canvas.width = 800;
-canvas.height = 600;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 
 // Example plane state
@@ -54,12 +54,11 @@ function drawScene(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, pla
 
   const canvasCenterX = canvas.width / 2;
 const canvasCenterY = canvas.height / 2;
-const pixelsPerMeter = 0.1;
 
   // Move origin to center of canvas
   ctx.translate(canvasCenterX, canvasCenterY);
   ctx.scale(pixelsPerMeter, -pixelsPerMeter);
-  
+
   // Draw plane
   ctx.save(); // isolate transformations for the plane
   ctx.translate(plane.x, plane.y);  // move to plane position
