@@ -43,11 +43,19 @@ function drawTaxiway(ctx, taxiway) {
     ctx.fillText(taxiway.name, mid.x, mid.y);
     ctx.restore();
 }
+const planeSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.0.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M552 264C582.9 264 608 289.1 608 320C608 350.9 582.9 376 552 376L424.7 376L265.5 549.6C259.4 556.2 250.9 560 241.9 560L198.2 560C187.3 560 179.6 549.3 183 538.9L237.3 376L137.6 376L84.8 442C81.8 445.8 77.2 448 72.3 448L52.5 448C42.1 448 34.5 438.2 37 428.1L64 320L37 211.9C34.4 201.8 42.1 192 52.5 192L72.3 192C77.2 192 81.8 194.2 84.8 198L137.6 264L237.3 264L183 101.1C179.6 90.7 187.3 80 198.2 80L241.9 80C250.9 80 259.4 83.8 265.5 90.4L424.7 264L552 264z"/></svg>`;
 function drawPlane(ctx, plane) {
-    ctx.beginPath();
-    ctx.arc(plane.position.x, plane.position.y, 5, 0, 2 * Math.PI);
-    ctx.fillStyle = plane.altitude > 0 ? "blue" : "green";
-    ctx.fill();
+    const planeImg = new Image();
+    planeImg.src = "data:image/svg+xml;base64," + btoa(planeSvg);
+    const size = 24; // icon size in pixels
+    const x = plane.position.x;
+    const y = plane.position.y;
+    // Optionally rotate according to heading
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((plane.heading * Math.PI) / 180);
+    ctx.drawImage(planeImg, -size / 2, -size / 2, size, size);
+    ctx.restore();
 }
 window.addEventListener("load", () => __awaiter(void 0, void 0, void 0, function* () {
     const airportCanvas = document.getElementById("airportCanvas");
@@ -66,26 +74,17 @@ window.addEventListener("load", () => __awaiter(void 0, void 0, void 0, function
         { points: [{ x: 100, y: 500 }, { x: 200, y: 500 }, { x: 200, y: 200 }], width: 10, name: "Taxiway A" },
         { points: [{ x: 600, y: 200 }, { x: 600, y: 300 }, { x: 500, y: 300 }], width: 10, name: "Taxiway B" },
     ];
-    // Planes
-    let planes = [
-        { position: { x: 100, y: 100 }, heading: 0, altitude: 0, callsign: "AAL123" },
-        { position: { x: 210, y: 210 }, heading: 90, altitude: 0, callsign: "DAL456" },
-        { position: { x: 400, y: 220 }, heading: 270, altitude: 3000, callsign: "UAL789" }, // airborne
-    ];
     // Draw all
     airportCtx.clearRect(0, 0, airportCanvas.width, airportCanvas.height);
     runways.forEach(r => drawRunway(airportCtx, r));
     taxiways.forEach(t => drawTaxiway(airportCtx, t));
-    planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height);
-    planes.forEach(p => drawPlane(planeCtx, p));
     const response = yield fetch("http://localhost:8080/api/v1/flight-tracking");
     const positions = yield response.json();
-    console.log(positions);
-    drawPlaneAt(planeCtx, planeCanvas, { x: 100, y: 100 });
+    drawPlaneAt(planeCtx, planeCanvas, { x: 100, y: 100, h: 100 });
     for (let i = 0; i < positions.length; i++) {
         const p = positions[i];
-        drawPlaneAt(planeCtx, planeCanvas, { x: p.xposition, y: p.yposition });
-        yield timeout(1000);
+        drawPlaneAt(planeCtx, planeCanvas, { x: p.xposition, y: p.yposition, h: p.heading });
+        yield timeout(10);
     }
 }));
 function timeout(ms) {
@@ -95,7 +94,7 @@ function drawPlaneAt(planeCtx, planeCanvas, p) {
     planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height); // keep this
     const plane = {
         position: { x: p.x, y: p.y },
-        heading: 0, altitude: 0, callsign: ""
+        heading: (p.h - 180), altitude: 0, callsign: ""
     };
     drawPlane(planeCtx, plane);
 }

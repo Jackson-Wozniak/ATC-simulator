@@ -25,9 +25,12 @@ public class FlightPathPosition extends BaseEntity {
     @Embedded
     private LocalCoordinate position;
 
-    public FlightPathPosition(FlightPlan plan, Instant instant, LocalCoordinate position){
+    private double heading;
+
+    public FlightPathPosition(FlightPlan plan, Instant instant, LocalCoordinate position, double heading){
         flightPlan = plan;
         timestamp = instant;
         this.position = position;
+        this.heading = heading;
     }
 }

@@ -10,10 +10,12 @@ public class FlightPathPositionDTO {
     private final String timestamp;
     private final double xPosition;
     private final double yPosition;
+    private final double heading;
 
     public FlightPathPositionDTO(FlightPathPosition position){
         this.timestamp = position.getTimestamp().toString();
         this.xPosition = position.getPosition().x();
         this.yPosition = position.getPosition().y();
+        this.heading = position.getHeading();
     }
 }

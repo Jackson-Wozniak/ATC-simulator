@@ -28,7 +28,7 @@ public class FlightTrackingController {
     @GetMapping
     public List<FlightPathPositionDTO> testMovement(){
         Plane plane = new Plane("TEST", new AircraftState(
-                LocalCoordinate.fromMeters(200, 200, 0), 10, 100));
+                LocalCoordinate.fromMeters(400, 400, 0), 10, 100));
         FlightPlan plan = new FlightPlan();
         plan.setDestinationRunway(new Runway("TEST", 50, 10, 200, LocalCoordinate.fromMeters(100, 100, 0)));
 

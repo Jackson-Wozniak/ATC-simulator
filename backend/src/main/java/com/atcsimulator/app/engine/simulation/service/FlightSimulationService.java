@@ -29,7 +29,7 @@ public class FlightSimulationService {
         Plane plane = flight.getPlane();
         flightPhysicsEngine.simulateMovement(plane.getAircraftState(), 1, navigationTargets);
 
-        FlightPathPosition position = new FlightPathPosition(flight.getFlightPlan(), Instant.now(), plane.getPosition());
+        FlightPathPosition position = new FlightPathPosition(flight.getFlightPlan(), Instant.now(), plane.getPosition(), plane.getAircraftState().getHeading());
 
         flight.getFlightPlan().getFlightPathPositions().add(position);
         navigationService.updateFlightPlan();
