@@ -22,18 +22,15 @@ public class FlightPhysicsEngine {
     }
 
     public void simulateMovement(AircraftState aircraftState, int secondsPassed){
+        double mathAngle = Math.toRadians(aircraftState.getHeading() - 90);
+
         double metersPerSecond = PhysicsUtils.knotsToMetersPerSecond(aircraftState.getSpeedKnots());
         double distance = metersPerSecond * secondsPassed;
-        double changeX = distance * Math.sin(Math.toRadians(aircraftState.getHeading()));
-        double changeY = distance * Math.cos(Math.toRadians(aircraftState.getHeading()));
+        double changeX = distance * Math.sin(mathAngle);
+        double changeY = distance * Math.cos(mathAngle);
         double newX = aircraftState.getCoordinates().x() + changeX;
         double newY = aircraftState.getCoordinates().y() + changeY;
         aircraftState.setCoordinates(LocalCoordinate.fromMeters(newX, newY, 0));
-        if(aircraftState.getHeading() < 180){
-            aircraftState.setHeading(aircraftState.getHeading() + 1);
-        }else{
-            aircraftState.setHeading(aircraftState.getHeading() - 1);
-        }
     }
 
     public double headingToDestination(LocalCoordinate position, LocalCoordinate destination){

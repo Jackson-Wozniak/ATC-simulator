@@ -34,7 +34,7 @@ public class FlightTrackingController {
 
         Flight flight = new Flight(plane, plan);
         plan.setFlight(flight);
-        for(int i = 0; i < 100; i++){
+        for(int i = 0; i < 10000; i++){
             flightSimulationService.progressFlight(flight);
         }
         return flight.getFlightPlan().getFlightPathPositions().stream().map(FlightPathPositionDTO::new).toList();
