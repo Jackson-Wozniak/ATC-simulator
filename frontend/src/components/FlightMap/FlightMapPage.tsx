@@ -8,8 +8,8 @@ const FlightMapPage: React.FC = () => {
     return (
         <ContentContainer>
             <CenteredFlexBox>
-                <AirportCanvas zIndex={-1} pixelsPerMeter={.2}/>
-                <PlaneCanvas zIndex={1} pixelsPerMeter={.2}/>
+                <AirportCanvas zIndex={-1} pixelsPerMeter={.1}/>
+                <PlaneCanvas zIndex={1} pixelsPerMeter={.1}/>
             </CenteredFlexBox>
         </ContentContainer>
     )

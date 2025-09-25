@@ -59,9 +59,19 @@ const canvasCenterY = canvas.height / 2;
   ctx.fillStyle = "green";
   ctx.fillRect(-(canvas.width / 2) / pixelsPerMeter, -(canvas.height / 2) / pixelsPerMeter, canvas.width / pixelsPerMeter, canvas.height / pixelsPerMeter);
 
-  // Example runway (static)
-  ctx.fillStyle = "gray";
-  ctx.fillRect(-100, 50, 2000, 50); // in world coordinates
+    ctx.beginPath();
+    ctx.moveTo(-1000, 50);
+    ctx.lineTo(-1000, 2050);
+    ctx.lineWidth = 50;
+    ctx.strokeStyle = "gray";
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(-1000, 50);
+    ctx.lineTo(1500, 1520);
+    ctx.lineWidth = 50;
+    ctx.strokeStyle = "gray";
+    ctx.stroke();
 }
 
 function animate(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
