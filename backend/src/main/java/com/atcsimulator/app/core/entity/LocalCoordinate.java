@@ -29,4 +29,12 @@ public class LocalCoordinate {
     public static LocalCoordinate fromMeters(double x, double y, double altitude){
         return new LocalCoordinate(x, y, altitude);
     }
+
+    public double x(){
+        return x.getValue();
+    }
+
+    public double y(){
+        return y.getValue();
+    }
 }

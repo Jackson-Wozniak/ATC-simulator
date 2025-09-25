@@ -1,10 +1,16 @@
 package com.atcsimulator.app.engine.simulation.service;
 
+import com.atcsimulator.app.core.entity.LocalCoordinate;
+import com.atcsimulator.app.engine.physics.service.FlightPhysicsEngine;
 import com.atcsimulator.app.engine.simulation.object.NavigationTargets;
+import com.atcsimulator.app.modules.flight.entity.Flight;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class NavigationService {
+    private final FlightPhysicsEngine flightPhysicsEngine;
 
     public void updateFlightPlan(){
 
@@ -26,7 +32,11 @@ public class NavigationService {
 
         IMPORTANTLY, this class only computes DESIRED CHANGES, not MOVEMENT
      */
-    public NavigationTargets computeControls(){
-        return null;
+    public NavigationTargets computeControls(Flight flight){
+        LocalCoordinate currentPosition = flight.getPlane().getPosition();
+        LocalCoordinate destinationPosition = flight.getFlightPlan()
+                .getDestinationRunway().getStartingLocalCoordinate();
+        double targetHeading = flightPhysicsEngine.headingToDestination(currentPosition, destinationPosition);
+        return new NavigationTargets(targetHeading, flight.getPlane().getAircraftState().getSpeedKnots());
     }
 }

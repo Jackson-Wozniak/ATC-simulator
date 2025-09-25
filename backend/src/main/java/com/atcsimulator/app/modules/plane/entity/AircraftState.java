@@ -7,12 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "aircraftState")
-@Table(name = "aircraft_states")
+@Embeddable
 @Getter
 @Setter
 @NoArgsConstructor
-public class AircraftState extends BaseEntity {
+public class AircraftState {
     @Embedded
     private LocalCoordinate coordinates;
 
@@ -22,7 +21,9 @@ public class AircraftState extends BaseEntity {
     @Column(name = "heading")
     private double heading;
 
-    @OneToOne(mappedBy = "aircraftState")
-    @JoinColumn(name = "plane_id", referencedColumnName = "id")
-    private Plane plane;
+    public AircraftState(LocalCoordinate coordinates, double speedKnots, double heading) {
+        this.coordinates = coordinates;
+        this.speedKnots = speedKnots;
+        this.heading = heading;
+    }
 }

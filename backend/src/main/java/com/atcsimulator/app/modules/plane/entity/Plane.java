@@ -17,7 +17,15 @@ public class Plane extends BaseEntity {
     @Column(name = "callsign")
     private String callsign;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "aircraft_state_id", referencedColumnName = "id")
+    @Embedded
     private AircraftState aircraftState;
+
+    public LocalCoordinate getPosition(){
+        return aircraftState.getCoordinates();
+    }
+
+    public Plane(String callsign, AircraftState initialState){
+        this.callsign = callsign;
+        this.aircraftState = initialState;
+    }
 }

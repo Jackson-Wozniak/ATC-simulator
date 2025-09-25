@@ -34,9 +34,6 @@ public class Airport extends BaseEntity {
     @OneToMany(mappedBy = "airport", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ParkingSpot> parkingSpots = new ArrayList<>();
 
-    @OneToMany(mappedBy = "airport", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Plane> planes = new ArrayList<>();
-
     protected Airport(Builder builder){
         super();
         this.airportName = builder.name;
