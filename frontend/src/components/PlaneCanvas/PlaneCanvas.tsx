@@ -1,79 +1,91 @@
+import { Style } from "@mui/icons-material";
 import Box from "@mui/material/Box"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+interface Coordinate {
+  x: number;
+  y: number;
+}
+
+interface Plane {
+  position: Coordinate;
+  altitude: number;
+  heading: number;
+  callsign: string;
+}
+
+interface Position {
+    timestamp: string,
+    xposition: number,
+    yposition: number,
+    heading: number
+}
 
 const PlaneCanvas: React.FC<{
     zIndex: number,
     pixelsPerMeter: number
 }> = ({zIndex, pixelsPerMeter}) => {
+
     useEffect(() => {
-        // const canvas = document.getElementById("airportCanvas") as HTMLCanvasElement;
-        // if (!canvas) return;
+        const fetchData = async (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
+            const response = await fetch("http://localhost:8080/api/v1/flight-tracking");
+            const positions: Position[] = await response.json();
 
-        // canvas.width = 1280;
-        // canvas.height = 593;
+            drawPlaneAt(canvas, ctx, {x: 100, y: 100, h: 100});
 
-        // const ctx = canvas.getContext("2d");
-        // if (!ctx) return;
+            for(let i = 0; i < positions.length; i++){
+                const p = positions[i];
+                drawPlaneAt(canvas, ctx, {x: p.xposition, y: p.yposition, h: 100});
+                await timeout(1);
+            }
+        }
 
-        // ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-        // const canvasCenterX = canvas.width / 2;
-        // const canvasCenterY = canvas.height / 2;
-        // ctx.translate(canvasCenterX, canvasCenterY);
-
-        // ctx.save();
-
-        // ctx.translate(0 + .5/2, 0 + 10/2);
-
-        // ctx.rotate(45);
-
-        // ctx.fillStyle = "red";
-        // ctx.fillRect(-10/2 * .1, -1000/2 * .1, 100 * .1, 1000 * .1);
-
-        // ctx.restore();
-
-        // ctx.fillStyle = "#595959ff";
-        // ctx.fillRect(-10/2 * .1, -1000/2 * .1, 100 * .1, 1000 * .1);
-
+        
         const canvas = document.getElementById("planeCanvas") as HTMLCanvasElement;
-const ctx = canvas.getContext("2d")!;
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
+        const ctx = canvas.getContext("2d")!;
 
-// Example plane state
-let plane = { x: 400, y: 400, width: 50, height: 20, angle: 0 };
+        ctx.save();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
 
-animate(canvas, ctx, plane);
-}, []);
+        const canvasCenterX = canvas.width / 2;
+        const canvasCenterY = canvas.height / 2;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-function drawScene(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, plane: any) {
-  ctx.setTransform(1,0,0,1,0,0);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.translate(canvasCenterX, canvasCenterY);
+        ctx.scale(pixelsPerMeter, -pixelsPerMeter);
+        fetchData(canvas, ctx);
+    }, []);
 
-  const canvasCenterX = canvas.width / 2;
-const canvasCenterY = canvas.height / 2;
+    function timeout(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
-  // Move origin to center of canvas
-  ctx.translate(canvasCenterX, canvasCenterY);
-  ctx.scale(pixelsPerMeter, -pixelsPerMeter);
+    function drawPlaneAt(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, p: {x: number, y: number, h: number}) {
+        ctx.clearRect(0, 0, canvas.width / pixelsPerMeter, canvas.height / pixelsPerMeter);
+        
+        const plane: Plane = {
+            position: {x: p.x, y: p.y},
+            heading: (p.h - 180), altitude: 0, callsign: ""
+        };
+        drawPlane(ctx, plane);
+    }
 
-  // Draw plane
-  ctx.save(); // isolate transformations for the plane
-  ctx.translate(plane.x, plane.y);  // move to plane position
-  ctx.rotate(plane.angle);          // rotate plane
-  ctx.fillStyle = "red";
-  ctx.fillRect(-plane.width/2, -plane.height/2, plane.width, plane.height);
-  ctx.restore(); // reset transform for anything else
-}
-
-function animate(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, plane: any) {
-  plane.y -= 2;        // move north
-  plane.x += 10;
-  drawScene(canvas, ctx, plane);
-  requestAnimationFrame(() => animate(canvas, ctx, plane));
-}
+    function drawPlane(ctx: CanvasRenderingContext2D, plane: Plane) {
+        ctx.beginPath();
+        ctx.arc(plane.position.x, plane.position.y, 20, 0, 2*Math.PI);
+        ctx.fillStyle = plane.altitude > 0 ? "blue" : "red";
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(plane.position.x, plane.position.y, 20, 0, 2*Math.PI);
+        ctx.fillStyle = plane.altitude > 0 ? "blue" : "red";
+        ctx.fill();
+    }
 
     return (
         <Box sx={{

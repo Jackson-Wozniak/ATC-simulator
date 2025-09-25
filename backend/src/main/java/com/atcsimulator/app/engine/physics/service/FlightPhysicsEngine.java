@@ -22,7 +22,7 @@ public class FlightPhysicsEngine {
     }
 
     public void simulateMovement(AircraftState aircraftState, int secondsPassed){
-        double mathAngle = Math.toRadians(aircraftState.getHeading() - 90);
+        double mathAngle = Math.toRadians(aircraftState.getHeading());
 
         double metersPerSecond = PhysicsUtils.knotsToMetersPerSecond(aircraftState.getSpeedKnots());
         double distance = metersPerSecond * secondsPassed;

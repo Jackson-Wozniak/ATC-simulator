@@ -105,7 +105,6 @@ window.addEventListener("load", async () => {
     planeCtx.setTransform(1, 0, 0, 1, 0, 0);
 
     planeCtx.translate(planeCanvas.width / 2, planeCanvas.height / 2);
-    planeCtx.rotate(90);
     planeCtx.scale(1, -1);
 
     airportCtx.clearRect(0, 0, airportCanvas.width, airportCanvas.height);
