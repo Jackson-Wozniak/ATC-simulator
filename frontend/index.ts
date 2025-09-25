@@ -114,7 +114,7 @@ function drawAllPlanes(planeCtx: CanvasRenderingContext2D, planes: Plane[],
     planeCanvas: HTMLCanvasElement, count: number){
     planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height);
     planes.forEach(p => {
-        p.position.x += count > 150 ? 1 : -1;
+        p.position.x += count > 100 ? -5 : 5;
         drawPlane(planeCtx, p);
     });
 

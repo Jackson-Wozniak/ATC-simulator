@@ -74,7 +74,7 @@ window.addEventListener("load", () => {
 function drawAllPlanes(planeCtx, planes, planeCanvas, count) {
     planeCtx.clearRect(0, 0, planeCanvas.width, planeCanvas.height);
     planes.forEach(p => {
-        p.position.x += count > 150 ? 1 : -1;
+        p.position.x += count > 100 ? -5 : 5;
         drawPlane(planeCtx, p);
     });
     requestAnimationFrame(() => drawAllPlanes(planeCtx, planes, planeCanvas, count + 1));

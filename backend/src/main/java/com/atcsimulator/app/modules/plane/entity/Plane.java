@@ -17,16 +17,7 @@ public class Plane extends BaseEntity {
     @Column(name = "callsign")
     private String callsign;
 
-    @Embedded
-    private LocalCoordinate coordinates;
-
-    @Column(name = "speed_knots")
-    private double speedKnots;
-
-    @Column(name = "heading")
-    private double heading;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "airport_id")
-    private Airport airport;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "aircraft_state_id", referencedColumnName = "id")
+    private AircraftState aircraftState;
 }
