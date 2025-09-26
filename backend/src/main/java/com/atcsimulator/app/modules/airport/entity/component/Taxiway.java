@@ -18,36 +18,34 @@ public class Taxiway extends BaseEntity {
     @Column(name = "taxiway_name")
     private String taxiwayName;
 
-    @Column(name = "taxiway_heading")
-    private int heading;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "x.value", column = @Column(name = "starting_x")),
+            @AttributeOverride(name = "y.value", column = @Column(name = "starting_y")),
+            @AttributeOverride(name = "altitude.value", column = @Column(name = "starting_altitude"))
+    })
+    private LocalCoordinate startingCoordinates;
 
     @Embedded
-    private LocalCoordinate startingLocalCoordinate;
+    @AttributeOverrides({
+            @AttributeOverride(name = "x.value", column = @Column(name = "ending_x")),
+            @AttributeOverride(name = "y.value", column = @Column(name = "ending_y")),
+            @AttributeOverride(name = "altitude.value", column = @Column(name = "ending_altitude"))
+    })
+    private LocalCoordinate endingCoordinates;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "width_meters"))
     private Meters width;
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "length_meters"))
-    private Meters length;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "airport_id")
     private Airport airport;
 
-    public Taxiway(String name, int heading, double width,
-                   double length, LocalCoordinate start){
+    public Taxiway(String name, double width, LocalCoordinate start, LocalCoordinate end){
         this.taxiwayName = name;
-        this.heading = heading;
         this.width = new Meters(width);
-        this.length = new Meters(length);
-        this.startingLocalCoordinate = start;
-
-        double radians = Math.toRadians(heading);
-        double endX = start.getX().getValue() + length * Math.sin(radians);
-        double endY = start.getY().getValue() + length * Math.cos(radians);
-
-        //this.endingLocalCoordinate = LocalCoordinate.fromMeters(endX, endY, 0);
+        this.startingCoordinates = start;
+        this.endingCoordinates = end;
     }
 }

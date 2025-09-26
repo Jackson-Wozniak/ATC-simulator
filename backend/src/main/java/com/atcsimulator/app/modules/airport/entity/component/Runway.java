@@ -22,7 +22,20 @@ public class Runway extends BaseEntity {
     private int heading;
 
     @Embedded
-    private LocalCoordinate startingLocalCoordinate;
+    @AttributeOverrides({
+            @AttributeOverride(name = "x.value", column = @Column(name = "starting_x")),
+            @AttributeOverride(name = "y.value", column = @Column(name = "starting_y")),
+            @AttributeOverride(name = "altitude.value", column = @Column(name = "starting_altitude"))
+    })
+    private LocalCoordinate startingCoordinates;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "x.value", column = @Column(name = "ending_x")),
+            @AttributeOverride(name = "y.value", column = @Column(name = "ending_y")),
+            @AttributeOverride(name = "altitude.value", column = @Column(name = "ending_altitude"))
+    })
+    private LocalCoordinate endingCoordinates;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "width_meters"))
@@ -41,12 +54,12 @@ public class Runway extends BaseEntity {
         this.heading = heading;
         this.width = new Meters(width);
         this.length = new Meters(length);
-        this.startingLocalCoordinate = start;
+        this.startingCoordinates = start;
 
         double radians = Math.toRadians(heading);
         double endX = start.getX().getValue() + length * Math.sin(radians);
         double endY = start.getY().getValue() + length * Math.cos(radians);
 
-        //this.endingLocalCoordinate = LocalCoordinate.fromMeters(endX, endY, 0);
+        this.endingCoordinates = LocalCoordinate.fromMeters(endX, endY, 0);
     }
 }

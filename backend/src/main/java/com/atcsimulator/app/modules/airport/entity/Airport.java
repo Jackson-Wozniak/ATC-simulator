@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,9 @@ public class Airport extends BaseEntity {
         this.runways.addAll(builder.runways);
         this.taxiways.addAll(builder.taxiways);
         this.parkingSpots.addAll(builder.parkingSpots);
+        this.runways.forEach(r -> r.setAirport(this));
+        this.taxiways.forEach(r -> r.setAirport(this));
+        this.parkingSpots.forEach(r -> r.setAirport(this));
     }
 
     public static class Builder {
@@ -77,5 +81,10 @@ public class Airport extends BaseEntity {
             airport.parkingSpots.forEach(p -> p.setAirport(airport));
             return airport;
         }
+    }
+
+    @Override
+    public String toString(){
+        return airportName + ", " + airportLocation + ", " + runways.stream().map(Runway::getRunwayName).toList();
     }
 }

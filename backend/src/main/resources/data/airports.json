@@ -1,0 +1,27 @@
+[
+  {
+    "name": "TEST",
+    "location": "Home Computer",
+    "runways": [
+      {
+        "name": "36L",
+        "heading": 360,
+        "startingX": -100,
+        "startingY": -1000,
+        "length": 2000,
+        "width": 25
+      },
+      {
+        "name": "36R",
+        "heading": 360,
+        "startingX": 500,
+        "startingY": -1000,
+        "length": 2400,
+        "width": 25
+      }
+    ],
+    "taxiways": [
+
+    ]
+  }
+]

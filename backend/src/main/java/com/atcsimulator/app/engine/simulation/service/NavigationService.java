@@ -35,7 +35,7 @@ public class NavigationService {
     public NavigationTargets computeControls(Flight flight){
         LocalCoordinate currentPosition = flight.getPlane().getPosition();
         LocalCoordinate destinationPosition = flight.getFlightPlan()
-                .getDestinationRunway().getStartingLocalCoordinate();
+                .getDestinationRunway().getStartingCoordinates();
         double targetHeading = flightPhysicsEngine.headingToDestination(currentPosition, destinationPosition);
         return new NavigationTargets(targetHeading, flight.getPlane().getAircraftState().getSpeedKnots());
     }
