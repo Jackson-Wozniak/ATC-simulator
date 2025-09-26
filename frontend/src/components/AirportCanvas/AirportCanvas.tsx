@@ -1,5 +1,5 @@
-import Box from "@mui/material/Box"
 import { useEffect } from "react";
+import AbsoluteFullBox from "../Shared/Custom/AbsoluteFullBox";
 
 const AirportCanvas: React.FC<{
     zIndex: number,
@@ -80,16 +80,9 @@ function animate(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
 }
 
     return (
-        <Box sx={{
-            zIndex: zIndex,
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%"
-        }}>
+        <AbsoluteFullBox zIndex={zIndex}>
             <canvas id="airportCanvas" style={{width: "100%", height: "100%", overflow: "hidden", display: "block"}}></canvas>
-        </Box>
+        </AbsoluteFullBox>
     )
 }
 

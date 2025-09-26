@@ -1,15 +1,13 @@
 import CenteredFlexBox from "../Shared/Custom/CenteredFlexBox";
 import ContentContainer from "../Shared/PageComponents/ContentContainter";
-import AirportCanvas from "../AirportCanvas/AirportCanvas";
-import PlaneCanvas from "../PlaneCanvas/PlaneCanvas";
+import FlightMap from "./FlightMap";
 
 const FlightMapPage: React.FC = () => {
 
     return (
         <ContentContainer>
             <CenteredFlexBox>
-                <AirportCanvas zIndex={-1} pixelsPerMeter={.1}/>
-                <PlaneCanvas zIndex={1} pixelsPerMeter={.1}/>
+                <FlightMap/>
             </CenteredFlexBox>
         </ContentContainer>
     )

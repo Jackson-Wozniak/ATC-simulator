@@ -8,7 +8,8 @@ const CenteredFlexBox: React.FC<{
 }> = ({children, flexDirection = "row", width = "100%", height = "100%"}) => {
 
     return (
-        <Box display="flex" flexDirection={flexDirection} width={width} height={height}>
+        <Box display="flex" flexDirection={flexDirection} width={width} height={height}
+            alignItems="center" justifyContent="center">
             {children}
         </Box>
     )
